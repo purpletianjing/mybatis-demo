@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mybatis.test.IUserMapper">
+    <select id="selectUser" resultType="user">
+        select * from User WHERE 1=1
+        <if test="state != null">
+            AND state = #{state}
+        </if>
+    </select>
+
+    <select id="selectUserByIdAndNameList" resultType="user">
+        SELECT * FROM User
+        WHERE id IN
+        <foreach collection="idList" index="index1" item="item1" open="(" separator="," close=")">
+            #{item1}
+        </foreach>
+        AND name IN
+        <foreach collection="nameList" index="index2" item="item2" open="(" separator="," close=")">
+            #{item2}
+        </foreach>
+    </select>
+    <select id="selectUserByIdAndNameList2" resultType="user">
+        SELECT * FROM User
+        WHERE id IN
+        <foreach collection="param1" index="index1" item="item1" open="(" separator="," close=")">
+            #{item1}
+        </foreach>
+        AND name IN
+        <foreach collection="param2" index="index2" item="item2" open="(" separator="," close=")">
+            #{item2}
+        </foreach>
+    </select>
+    <select id="selectLikeIfElse" resultType="user">
+        SELECT * FROM User
+        WHERE 1=1
+        <choose>
+            <when test="name != null">
+                 AND name = #{name}
+            </when>
+            <when test="age != null">
+                 AND age = #{age}
+            </when>
+            <otherwise>
+                 AND gender = #{gender}
+            </otherwise>
+        </choose>
+    </select>
+    
+    <select id="selectUserByNameAndAgeList" parameterType="list" resultType="org.mybatis.example.User">
+        SELECT * FROM User
+        WHERE (name, age) IN
+        <foreach item="item" collection="users" open="((" separator="),(" close="))">
+            #{item.name}, #{item.age}
+        </foreach>
+    </select>
+
+
+
+    <!--<sql id="selectResult">-->
+        <!--id AS id,-->
+        <!--name AS name-->
+    <!--</sql>-->
+    <!--<select id="selectUserById" resultType="org.mybatis.example.User">-->
+        <!--select-->
+        <!--<include refid="selectResult"/>-->
+<!--&#45;&#45;          id AS id,-->
+<!--&#45;&#45;          name AS name-->
+        <!--from User-->
+        <!--WHERE id=2-->
+    <!--</select>-->
+    <!--<select id="selectUserByIdV2" resultType="org.mybatis.example.User">-->
+        <!--select-->
+<!--&#45;&#45;          id AS id,-->
+<!--&#45;&#45;          name AS name-->
+        <!--<include refid="selectResult"/>-->
+        <!--from User-->
+        <!--WHERE name="sun"-->
+    <!--</select>-->
+    <!--<insert id="insertUser" parameterType="org.mybatis.example.User"-->
+            <!--useGeneratedKeys="true" keyProperty="id">-->
+        <!--INSERT INTO User(name) VALUES(#{name})-->
+<!--&#45;&#45;         #{} ? ${name}-->
+    <!--</insert>-->
+    <!--<update id="updateUser" parameterType="org.mybatis.example.User">-->
+        <!--UPDATE User-->
+        <!--<set>-->
+            <!--<if test="name != null">-->
+                <!--name = #{name}-->
+            <!--</if>-->
+        <!--</set>-->
+        <!--WHERE id=1-->
+    <!--</update>-->
+</mapper>
